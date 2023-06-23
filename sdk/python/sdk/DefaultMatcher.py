@@ -93,20 +93,10 @@ class DefaultMatcher(IMatcher):
 
         # 条件匹配
         if op == 'and':
-            for arg in args:
-                if not self.match(arg, node):
-                    return False
-            return True
-
+            return all(self.match(arg, node) for arg in args)
         if op == 'or':
-            for arg in args:
-                if self.match(arg, node):
-                    return True
-            return False
-
-        # 属性匹配
-        comparator = self.comparators.get(op)
-        if comparator:
+            return any(self.match(arg, node) for arg in args)
+        if comparator := self.comparators.get(op):
             attribute, value = args
             targetValue = node.getAttr(attribute)
             return comparator.compare(targetValue, value)

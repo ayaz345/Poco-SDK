@@ -16,15 +16,9 @@ class Attributor(object):
     """
 
     def getAttr(self, node, attrName):
-        if type(node) in (list, tuple):
-            node_ = node[0]
-        else:
-            node_ = node
+        node_ = node[0] if type(node) in (list, tuple) else node
         return node_.getAttr(attrName)
 
     def setAttr(self, node, attrName, attrVal):
-        if type(node) in (list, tuple):
-            node_ = node[0]
-        else:
-            node_ = node
+        node_ = node[0] if type(node) in (list, tuple) else node
         node_.setAttr(attrName, attrVal)

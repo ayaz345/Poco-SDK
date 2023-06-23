@@ -96,19 +96,17 @@ class AbstractDumper(IDumper):
         if not node:
             return None
 
-        payload = {}
-
-        # filter out all None values
-        for attrName, attrVal in node.enumerateAttrs():
-            if attrVal is not None:
-                payload[attrName] = attrVal
-
+        payload = {
+            attrName: attrVal
+            for attrName, attrVal in node.enumerateAttrs()
+            if attrVal is not None
+        }
         result = {}
-        children = []
-        for child in node.getChildren():
-            if not onlyVisibleNode or child.getAttr('visible'):
-                children.append(self.dumpHierarchyImpl(child, onlyVisibleNode))
-        if len(children) > 0:
+        if children := [
+            self.dumpHierarchyImpl(child, onlyVisibleNode)
+            for child in node.getChildren()
+            if not onlyVisibleNode or child.getAttr('visible')
+        ]:
             result['children'] = children
 
         result['name'] = payload.get('name') or node.getAttr('name')

@@ -113,10 +113,7 @@ class Selector(ISelector):
             for index, arg in enumerate(args):
                 midResult = []
                 for parent in parents:
-                    if op == '/' and index != 0:
-                        _maxDepth = 1
-                    else:
-                        _maxDepth = maxDepth
+                    _maxDepth = 1 if op == '/' and index != 0 else maxDepth
                     # 按路径进行遍历一定要multiple为true才不会漏掉
                     _res = self.selectImpl(arg, True, parent, _maxDepth, onlyVisibleNode, False)
                     [midResult.append(r) for r in _res if r not in midResult]
@@ -136,13 +133,15 @@ class Selector(ISelector):
                 result = [self.selectImpl(cond, multiple, root, maxDepth, onlyVisibleNode, includeRoot)[i]]
             except IndexError:
                 raise NoSuchTargetException(
-                    u'Query results index out of range. Index={} condition "{}" from root "{}".'.format(i, cond, root))
+                    f'Query results index out of range. Index={i} condition "{cond}" from root "{root}".'
+                )
         elif op == '^':
             # parent
             # only select parent of the first matched UI element
             query1, _ = args
-            result1 = self.selectImpl(query1, False, root, maxDepth, onlyVisibleNode, includeRoot)
-            if result1:
+            if result1 := self.selectImpl(
+                query1, False, root, maxDepth, onlyVisibleNode, includeRoot
+            ):
                 parent_node = result1[0].getParent()
                 if parent_node is not None:
                     result = [parent_node]
@@ -174,8 +173,9 @@ class Selector(ISelector):
         maxDepth -= 1
 
         for child in node.getChildren():
-            finished = self._selectTraverse(cond, child, outResult, multiple, maxDepth, onlyVisibleNode, True)
-            if finished:
+            if finished := self._selectTraverse(
+                cond, child, outResult, multiple, maxDepth, onlyVisibleNode, True
+            ):
                 return True
 
         return False

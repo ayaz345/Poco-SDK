@@ -22,7 +22,7 @@ class NodeHasBeenRemovedException(Exception):
     """
 
     def __init__(self, attrName, node):
-        msg = 'Node was no longer alive when query attribute "{}". Please re-select.'.format(attrName)
+        msg = f'Node was no longer alive when query attribute "{attrName}". Please re-select.'
         super(NodeHasBeenRemovedException, self).__init__(msg)
 
 
@@ -34,7 +34,7 @@ class UnableToSetAttributeException(Exception):
     """
 
     def __init__(self, attrName, node):
-        msg = 'Unable to set attribute "{}" of node "{}".'.format(attrName, node)
+        msg = f'Unable to set attribute "{attrName}" of node "{node}".'
         super(UnableToSetAttributeException, self).__init__(msg)
 
 
@@ -56,4 +56,4 @@ class NoSuchComparatorException(Exception):
 
     def __init__(self, matchingMethod, matcherName):
         super(NoSuchComparatorException, self).__init__()
-        self.message = 'No such matching method "{}" of this Matcher ("{}")'.format(matchingMethod, matcherName)
+        self.message = f'No such matching method "{matchingMethod}" of this Matcher ("{matcherName}")'
